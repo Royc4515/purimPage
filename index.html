@@ -26,6 +26,7 @@
             background-color: #fcfcfc;
             font-family: system-ui, -apple-system, sans-serif;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent; /* מונע את הריבוע האפור בלחיצה באייפון */
         }
 
         .book-wrapper {
@@ -34,6 +35,8 @@
             max-width: var(--book-width-desktop);
             aspect-ratio: 934 / 1114;
             transition: transform var(--transition-time) ease;
+            transform-origin: right center; /* הופך את השדרה לציר המרכזי של ההזזה */
+            will-change: transform;
         }
 
         @media (min-width: 800px) {
@@ -44,7 +47,8 @@
 
         @media (max-width: 799px) {
             .book-wrapper.is-open {
-                transform: translateX(-50%) scale(0.6);
+                /* שינוי קנה המידה מבטיח שהספר הפתוח יתפוס בדיוק 88% מרוחב המסך הצר */
+                transform: translateX(-50%) scale(0.55);
             }
         }
 
@@ -52,7 +56,8 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            perspective: 2000px; 
+            perspective: 2000px;
+            -webkit-perspective: 2000px; /* תאימות חובה לספארי */
         }
 
         .book-inside {
@@ -82,6 +87,7 @@
             transform-origin: right center;
             transition: transform var(--transition-time) cubic-bezier(0.645, 0.045, 0.355, 1);
             transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
             cursor: pointer;
             border-radius: 4px;
             box-shadow: -5px 5px 15px rgba(0,0,0,0.2);
@@ -98,6 +104,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; /* מונע ריצופים תלת-ממדיים באייפון */
             border-radius: 4px;
             overflow: hidden;
         }
@@ -133,10 +140,9 @@
             pointer-events: none;
         }
 
-        /* עיצוב כפתור השיתוף לוואטסאפ */
         .whatsapp-btn {
             position: fixed;
-            bottom: -100px; /* מוסתר למטה כברירת מחדל */
+            bottom: -100px;
             left: 50%;
             transform: translateX(-50%);
             background-color: #25D366;
@@ -156,7 +162,6 @@
             font-family: inherit;
         }
 
-        /* מחלקה שתעלה את הכפתור למעלה כשהספר נפתח */
         .whatsapp-btn.show {
             bottom: 40px;
         }
@@ -205,19 +210,12 @@
             
             cover.classList.toggle('is-open');
             wrapper.classList.toggle('is-open');
-            
-            // הצגה או הסתרה של כפתור הוואטסאפ יחד עם פתיחת הספר
             waBtn.classList.toggle('show');
         }
 
         function shareOnWhatsApp() {
-            // לקיחת הכתובת הנוכחית של האתר
             const currentUrl = window.location.href;
-            
-            // יצירת הטקסט שיישלח
             const message = "פורים שמח ממשפחת כרמלי! 🎉\nלחצו כאן כדי לפתוח את האיגרת שלנו:\n" + currentUrl;
-            
-            // קידוד הטקסט לפורמט של URL ופתיחת חלון וואטסאפ
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
