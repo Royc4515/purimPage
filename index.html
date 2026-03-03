@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>פורים שמח! מרועי כרמלי</title>
+    
+    <meta property="og:title" content="פורים שמח! מרועי כרמלי">
+    <meta property="og:description" content="לחצו על הקישור לפתיחת האיגרת">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="1.png">
+
+    <style>
+        :root {
+            --book-width-mobile: 80vw;
+            --book-width-desktop: 400px;
+            --transition-time: 1.2s;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #fcfcfc;
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* מעטפת שאחראית על התאמת המיקום וקנה המידה בעת הפתיחה */
+        .book-wrapper {
+            position: relative;
+            width: var(--book-width-mobile);
+            max-width: var(--book-width-desktop);
+            aspect-ratio: 934 / 1114; /* יחס הפרופורציות המדויק של התמונות */
+            transition: transform var(--transition-time) ease;
+        }
+
+        /* לוגיקה למסכים גדולים: הזזה בלבד למרכז */
+        @media (min-width: 800px) {
+            .book-wrapper.is-open {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* לוגיקה למובייל: הזזה למרכז + כיווץ קנה מידה למניעת חריגה מהמסך */
+        @media (max-width: 799px) {
+            .book-wrapper.is-open {
+                transform: translateX(-50%) scale(0.6);
+            }
+        }
+
+        .book-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            perspective: 2000px; 
+        }
+
+        .book-inside {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .book-inside img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-cover {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: right center; /* נקודת ציר הפתיחה - ימין */
+            transition: transform var(--transition-time) cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: -5px 5px 15px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .book-cover.is-open {
+            transform: rotateY(180deg);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cover-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .cover-front {
+            background-color: white;
+        }
+
+        .cover-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cover-back {
+            background-color: #f9f9f9;
+            transform: rotateY(180deg);
+            background-image: linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 10%);
+        }
+        
+        .hint {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            transition: opacity 0.3s;
+        }
+
+        /* הסתרת טקסט ההנחיה כאשר הספר פתוח */
+        .book-wrapper.is-open .hint {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book-wrapper" id="bookWrapper">
+        <div class="book-container">
+            <div class="book-inside">
+                <img src="2.png" alt="תוכן הברכה">
+            </div>
+
+            <div class="book-cover" id="coverPage" onclick="toggleBook()">
+                <div class="cover-face cover-front">
+                    <img src="1.png" alt="חזית הברכה">
+                </div>
+                <div class="cover-face cover-back"></div>
+            </div>
+        </div>
+        <div class="hint">לחצו על הכריכה כדי לפתוח את האיגרת</div>
+    </div>
+
+    <script>
+        function toggleBook() {
+            const cover = document.getElementById('coverPage');
+            const wrapper = document.getElementById('bookWrapper');
+            
+            // הפעלת האנימציה המרחבית על המעטפת ועל הכריכה סימולטנית
+            cover.classList.toggle('is-open');
+            wrapper.classList.toggle('is-open');
+        }
+    </script>
+
+</body>
+</html>
